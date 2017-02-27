@@ -1,0 +1,13 @@
+import logging
+
+
+def configure_loggers():
+    default_format = '%(asctime)s %(levelname)s\t%(name)s:\t%(message)s'
+    default_date_format = '%H:%M:%S'
+    default_formatter = logging.Formatter(default_format, default_date_format)
+
+    logging.basicConfig(
+        level=logging.INFO,
+        format=default_format,
+        datefmt=default_date_format
+    )
