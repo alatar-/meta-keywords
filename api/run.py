@@ -17,7 +17,7 @@ def endpoint():
     soup = fetcher.get_url_soup('https://www.twilio.com')
     keywords = parser.count_keywords(soup)
 
-    return keywords
+    return ""
 
 
 if __name__ == '__main__':

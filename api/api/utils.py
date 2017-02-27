@@ -11,3 +11,9 @@ def configure_loggers():
         format=default_format,
         datefmt=default_date_format
     )
+
+    mainLoggerHandler = logging.StreamHandler()
+    mainLoggerHandler.setFormatter(default_formatter)
+    mainLogger = logging.getLogger('main')
+    mainLogger.setLevel(logging.DEBUG)
+    mainLogger.addHandler(mainLoggerHandler)
