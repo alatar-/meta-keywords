@@ -1,4 +1,12 @@
 import logging
+from enum import Enum
+
+
+class status(Enum):
+    OK = 0
+    URL_VALIDATION_FAILED = 1
+    FETCHING_OR_DECODING_ERROR = 2
+    UNEXPECTED_SERVER_RESPONSE = 3
 
 
 def configure_loggers():
