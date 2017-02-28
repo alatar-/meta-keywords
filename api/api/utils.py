@@ -25,4 +25,4 @@ def configure_loggers():
     mainLoggerHandler.setFormatter(default_formatter)
     mainLogger = logging.getLogger('main')
     mainLogger.setLevel(logging.DEBUG)
-    mainLogger.addHandler(mainLoggerHandler)
+    # mainLogger.addHandler(mainLoggerHandler)

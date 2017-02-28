@@ -12,10 +12,10 @@ def find_meta_keywords(soup):
         logger.debug('keywords meta tag missing or unvalid structure!')
         return []
     else:
-        logger.debug('raw_keywords', raw_keywords)
+        logger.debug('raw_keywords: {keywords}'.format(keywords=raw_keywords))
         keywords = map(lambda x: x.strip().lower(), raw_keywords.split(","))  # strip extra spacer, lowercase
         unique_keywords = list(set(keywords))  # remove duplicates
-        logger.debug('unique_keywords', unique_keywords)
+        logger.debug('unique_keywords: {keywords}'.format(keywords=unique_keywords))
 
         return unique_keywords
 
@@ -41,5 +41,5 @@ def count_keywords_in_text(soup, keywords):
         # use some tokenizer for better results
         result[key] = visible_text.count(key)
 
-    logger.debug("count_keywords", result)
+    logger.debug("count_keywords result: {result}".format(result=result))
     return result
