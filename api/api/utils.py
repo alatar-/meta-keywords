@@ -8,6 +8,7 @@ class status(Enum):
     FETCHING_OR_DECODING_ERROR = 2
     UNEXPECTED_SERVER_RESPONSE = 3
     HTML_DOM_PARSING_ERROR = 4
+    URL_NOT_FOUND = 5
 
 
 def configure_loggers():

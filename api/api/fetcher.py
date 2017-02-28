@@ -29,16 +29,20 @@ def fetch_url(url):
         return None, status.FETCHING_OR_DECODING_ERROR
 
     logger.debug("Decoding the response (code {:d})...".format(result.status_code))
-    if result.status_code != 200:
-        return None, status.UNEXPECTED_SERVER_RESPONSE
 
-    return result, status.OK
+    switch = {
+        200: status.OK,
+        404: status.URL_NOT_FOUND,
+    }
+    req_status = switch.get(result.status_code, status.UNEXPECTED_SERVER_RESPONSE)
+
+    return result, req_status
 
 
 def get_soup_from_url(url):
     logger.debug("Fetching the url...")
-    result, status = fetch_url(url)
-    if not result:
+    result, req_status = fetch_url(url)
+    if req_status != status.OK:
         return None, status
 
     logger.debug("Generating soup object...")
