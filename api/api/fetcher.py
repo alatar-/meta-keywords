@@ -32,8 +32,7 @@ def fetch_url(url):
     if result.status_code != 200:
         return None, status.UNEXPECTED_SERVER_RESPONSE
 
-    unicoded_result = result.text
-    return unicoded_result, status.OK
+    return result, status.OK
 
 
 def get_soup_from_url(url):
@@ -44,7 +43,8 @@ def get_soup_from_url(url):
 
     logger.debug("Generating soup object...")
     try:
-        soup = BeautifulSoup(result, 'lxml')
+        # soup converts to unicode by itself, passing content and input encoding
+        soup = BeautifulSoup(result.content, 'lxml', from_encoding=result.encoding)
     except Exception as e:
         # bs4 doesn't specify the set of possible exceptions
         logger.debug("BeautifulSoup exception: {}".format(e))

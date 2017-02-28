@@ -22,7 +22,7 @@ class TestFetchUrl:
         assert (None, status.URL_VALIDATION_FAILED) == fetcher.fetch_url("192.168.0.1/asd")
 
     def test_valid_url_response_different_than_http_200(self):
-        mock_response = MagicMock(status_code=201, text=load_file_content('six_keywords_one_match.html'))
+        mock_response = MagicMock(status_code=201, content=load_file_content('six_keywords_one_match.html'))
         fetcher.requests.get = MagicMock(return_value=mock_response)
 
         result, result_status = fetcher.fetch_url("http://www.correct.url.com/resource?param=213&")
@@ -31,7 +31,7 @@ class TestFetchUrl:
 
 
     def test_valid_url(self):
-        mock_response = MagicMock(status_code=200, text=load_file_content('six_keywords_one_match.html'))
+        mock_response = MagicMock(status_code=200, content=load_file_content('six_keywords_one_match.html'))
         fetcher.requests.get = MagicMock(return_value=mock_response)
 
         result, result_status = fetcher.fetch_url("http://www.correct.url.com/resource?param=213&")
@@ -40,8 +40,8 @@ class TestFetchUrl:
 
 class TestGetSoupFromUrl:
 
-    def test_invlaid_input_html(self):
-        mock_response = MagicMock(status_code=200, text=load_file_content('invalid_document.html'))
+    def test_invalid_input_html(self):
+        mock_response = MagicMock(status_code=200, content=load_file_content('invalid_document.html'))
         fetcher.requests.get = MagicMock(return_value=mock_response)
 
         soup, result_status = fetcher.get_soup_from_url("http://www.correct.url")
@@ -50,7 +50,7 @@ class TestGetSoupFromUrl:
         assert status.OK == result_status
 
     def test_valid_input(self):
-        mock_response = MagicMock(status_code=200, text=load_file_content('meta_keywords_missing.html'))
+        mock_response = MagicMock(status_code=200, content=load_file_content('six_keywords_one_match.html'))
         fetcher.requests.get = MagicMock(return_value=mock_response)
 
         soup, result_status = fetcher.get_soup_from_url("http://www.correct.url")
