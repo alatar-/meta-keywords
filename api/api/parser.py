@@ -14,7 +14,8 @@ def find_meta_keywords(soup):
     else:
         logger.debug('raw_keywords: {keywords}'.format(keywords=raw_keywords))
         keywords = map(lambda x: x.strip().lower(), raw_keywords.split(","))  # strip extra spacer, lowercase
-        unique_keywords = list(set(keywords))  # remove duplicates
+        non_empty_keywords = filter(None, keywords)  # remove empty keywords
+        unique_keywords = list(set(non_empty_keywords))  # remove duplicates
         logger.debug('unique_keywords: {keywords}'.format(keywords=unique_keywords))
 
         return unique_keywords

@@ -31,7 +31,16 @@ class TestFindMetaKeywords:
 
         keywords = parser.find_meta_keywords(soup)
         assert type(keywords) is list
-        assert len(keywords) == 6
+        assert 6 == len(keywords)
+        assert set(expected_keywords) == set(keywords)
+
+    def test_meta_having_empty_keywords(self):
+        soup = get_soup_from_fixture('basic_having_empty_keywords.html')
+        expected_keywords = ['key4', 'keyword1', 'key2']
+
+        keywords = parser.find_meta_keywords(soup)
+        assert type(keywords) is list
+        assert 3 == len(keywords)
         assert set(expected_keywords) == set(keywords)
 
 
