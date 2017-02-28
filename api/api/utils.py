@@ -7,6 +7,7 @@ class status(Enum):
     URL_VALIDATION_FAILED = 1
     FETCHING_OR_DECODING_ERROR = 2
     UNEXPECTED_SERVER_RESPONSE = 3
+    HTML_DOM_PARSING_ERROR = 4
 
 
 def configure_loggers():

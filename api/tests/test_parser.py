@@ -6,7 +6,7 @@ from api import parser
 def get_soup_from_fixture(filename):
     with open("tests/fixtures/%s" % filename, 'r') as f:
         content = "".join(f.readlines())
-        return BeautifulSoup(content, 'html.parser').find()
+        return BeautifulSoup(content, 'lxml')
 
 
 class TestFindMetaKeywords:

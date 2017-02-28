@@ -2,6 +2,7 @@ import logging
 
 import validators
 import requests
+from bs4 import BeautifulSoup
 
 from .utils import status
 from . import config
@@ -33,13 +34,16 @@ def fetch_url(url):
     return unicoded_result, status.OK
 
 
-def get_url_soup(url):
+def get_soup_from_url(url):
     logger.debug("Fetching the url...")
     result, status = fetch_url(url)
     if not result:
         return None, status
 
     logger.debug("Generating soup object...")
-    soup = BeautifulSoup(result, 'html.parser')
-
-    return soup
+    try:
+        soup = BeautifulSoup(result, 'lxml')
+    except:
+        return None, status.HTML_DOM_PARSING_ERROR
+    else:
+        return soup, status.OK
