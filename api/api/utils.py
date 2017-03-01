@@ -1,6 +1,7 @@
 import logging
 from enum import Enum
 
+from . import config
 
 class status(Enum):
     OK = 0
@@ -22,8 +23,11 @@ def configure_loggers():
         datefmt=default_date_format
     )
 
-    mainLoggerHandler = logging.StreamHandler()
-    mainLoggerHandler.setFormatter(default_formatter)
+    mainLoggerFileHandler = logging.FileHandler(config.APP_LOG_FILE)
+    mainLoggerFileHandler.setFormatter(default_formatter)
+    mainLoggerFileHandler.setLevel(logging.DEBUG)
     mainLogger = logging.getLogger('main')
     mainLogger.setLevel(logging.DEBUG)
-    # mainLogger.addHandler(mainLoggerHandler)
+
+    logging.getLogger().addHandler(mainLoggerFileHandler)
+    mainLogger.addHandler(mainLoggerFileHandler)
