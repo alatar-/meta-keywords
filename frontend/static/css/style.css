@@ -3,10 +3,6 @@ html, body.app {
     background: #f1f1f1;
 }
 
-input {
-   text-align: center;
-}
-
 .fill-height {
     height: 100%;
     min-height: 100%;
@@ -16,15 +12,15 @@ input {
     align-items: center;
 }
 
+input {
+   text-align: center;
+}
+
 .custom-alert {
     padding: 5px;
     margin: 5px;
 }
 
-div.panel {
-    margin-bottom: 12px;
-}
-
-div.panel-body {
-    padding: 5px;
+button[type="submit"] {
+    min-width: 100px;
 }
