@@ -1,45 +1,86 @@
 (function($) {
     "use strict";
     $(document).ready(function() {
+
         $("#form").bind('submit', function (e) {
             e.preventDefault();
 
-            var url = $('#input-url').val();
+            var url = $('#form-url input').val();
             if (!isURL(url)) {
-                $('#input-url-group').addClass('has-error');
+                $('#form-url').addClass('has-error');
                 return false;
             }
-
-            $('#input-url-group').removeClass('has-error');
-            $("#input-url-group div").addClass("hidden");
-            $('#form-submit span').addClass('hidden'); // Hide "Process" on submit buttom
-            $('#form-submit i').removeClass('hidden'); // Show spinner on submit buttom
-
+            
+            DOM.showProcessingSpinner();
             $.ajax({
                 type: "GET",
                 url: "/count_keywords?url=" + encodeURIComponent(url)
             }).done(function(response) {
                 var keywords = response.result || {};
-                $('#results-count').text(Object.keys(keywords).length);
-                $('#results-group').empty();
+                var keywordsCount = Object.keys(keywords).length;
+                
+                DOM.showResultsPanel(keywordsCount);
                 $.each(keywords, function(keyword, count) {
-                    var html = '<li class="list-group-item">' + keyword + '<span class="badge">' + count + '</span></li>';
-                    $('#results-group').append(html);
+                    DOM.appendResult(keyword, count);
                 });
-                $('#form-submit i').addClass('hidden');
-                $('#form-submit span').removeClass('hidden');
-                $('#results-panel').removeClass('hidden');
             }).fail(function(error) {
                 var errMessage = error.responseJSON.message || "Unknown error occured.";
-                $("#input-url-group span").text(errMessage);
-                $("#input-url-group div").removeClass("hidden");
-                $('#form-submit i').addClass('hidden');
-                $('#form-submit span').removeClass('hidden');
+                DOM.showAlert(errMessage);
+            }).complete(function() {
+                DOM.hideProcessingSpinner();
             });
 
             return false;
         });
+
+        var DOM = {
+            clearPage: function() {
+                $('#form-url').removeClass('has-error');
+                $("#form-alert-box").addClass("hidden");
+                $('#results-panel').addClass('hidden');
+            },
+
+            showProcessingSpinner: function() {
+                this.clearPage();
+                $('#form-submit span').addClass('hidden'); // Hide "Process" on submit buttom
+                $('#form-submit i').removeClass('hidden'); // Show spinner on submit buttom
+            },
+
+            hideProcessingSpinner: function() {
+                $('#form-submit span').removeClass('hidden');
+                $('#form-submit i').addClass('hidden');
+            },
+
+            showAlert: function(errMessage) {
+                $("#form-alert-box span").text(errMessage);
+                $("#form-alert-box").removeClass("hidden");
+            },
+
+            showResultsPanel: function(resultsCount) {
+                $('#results-count').text(resultsCount);
+                $('#results-group').empty();
+                $('#results-panel').removeClass('hidden');
+            },
+
+            appendResult: function(keyword, count) {
+                var li = createElement('li', 'list-group-item');
+                li.appendChild(document.createTextNode(keyword));
+                li.appendChild(createElement('span', 'badge', count));
+                $('#results-group').append(li);
+            }
+
+        };
+
     });
+
+    function createElement(type, className, value) {
+        var elem = document.createElement(type);
+        elem.className = className;
+        if (value !== undefined) {
+            elem.appendChild(document.createTextNode(value));
+        }
+        return elem;
+    }
 
     function isURL(str) {
         // Source: http://stackoverflow.com/a/14582229
