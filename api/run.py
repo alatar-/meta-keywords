@@ -21,6 +21,8 @@ def endpoint():
         return utils.gen_response(400, status.MISSING_URL_PARAM)
 
     soup, req_status = fetcher.get_soup_from_url(url)
+    if req_status == status.URL_VALIDATION_FAILED:
+        return utils.gen_response(400, req_status)
     if req_status != status.OK:
         return utils.gen_response(500, req_status)
 

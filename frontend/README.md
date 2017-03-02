@@ -1,4 +1,4 @@
-Frontent (static) page for Meta-keywords finder.
+Frontent (static) page for Meta-keywords finder. Use any webserver to serve.
 
 ## TODO
 
