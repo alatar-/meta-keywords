@@ -1,16 +1,10 @@
 import logging
 from enum import Enum
 
+import flask
+
 from . import config
-
-class status(Enum):
-    OK = 0
-    URL_VALIDATION_FAILED = 1
-    FETCHING_OR_DECODING_ERROR = 2
-    UNEXPECTED_SERVER_RESPONSE = 3
-    HTML_DOM_PARSING_ERROR = 4
-    URL_NOT_FOUND = 5
-
+from . import messages
 
 def configure_loggers():
     default_format = '%(asctime)s %(levelname)s\t%(name)s:\t%(message)s'
@@ -31,3 +25,20 @@ def configure_loggers():
 
     logging.getLogger().addHandler(mainLoggerFileHandler)
     mainLogger.addHandler(mainLoggerFileHandler)
+
+
+def gen_response(http_code, req_status, result=None):
+    '''
+    Helper function generating Flask response based on
+    passed data.
+
+    Returns `http_code` status with JSON response containing
+    "message" and "result" (if provided).
+    '''
+    response = {
+        "message": messages.get_message(req_status)
+    }
+    if result:
+        response['result'] = result
+
+    return flask.jsonify(response), http_code

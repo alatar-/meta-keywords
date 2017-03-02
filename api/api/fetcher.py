@@ -4,7 +4,7 @@ import validators
 import requests
 from bs4 import BeautifulSoup
 
-from .utils import status
+from .messages import status
 from . import config
 
 logger = logging.getLogger("main")
@@ -35,15 +35,17 @@ def fetch_url(url):
         404: status.URL_NOT_FOUND,
     }
     req_status = switch.get(result.status_code, status.UNEXPECTED_SERVER_RESPONSE)
-
     return result, req_status
 
 
 def get_soup_from_url(url):
+    '''
+    Generate HTML page tree object (soup) using BeautifulSoup lib.
+    '''
     logger.debug("Fetching the url...")
     result, req_status = fetch_url(url)
     if req_status != status.OK:
-        return None, status
+        return None, req_status
 
     logger.debug("Generating soup object...")
     try:
@@ -51,7 +53,7 @@ def get_soup_from_url(url):
         soup = BeautifulSoup(result.content, 'lxml', from_encoding=result.encoding)
     except Exception as e:
         # bs4 doesn't specify the set of possible exceptions
-        logger.debug("BeautifulSoup exception: {}".format(e))
+        logger.warning("BeautifulSoup exception: {}".format(e))
         return None, status.HTML_DOM_PARSING_ERROR
     else:
         return soup, status.OK

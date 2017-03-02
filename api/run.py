@@ -1,8 +1,10 @@
 import logging
 
 import flask
+from flask import send_from_directory
 
 from api import utils, fetcher, parser
+from api.messages import status
 
 # flask setup
 app = flask.Flask(__name__)
@@ -16,26 +18,27 @@ logger = logging.getLogger('main')
 def endpoint():
     url = flask.request.args.get('url')
     if not url:
-        return flask.jsonify({
-                'message': "Missing URL parameter"
-            }), 400
+        return utils.gen_response(400, status.MISSING_URL_PARAM)
 
-    soup, status = fetcher.get_soup_from_url(url)
-    if not soup:
-        return flask.jsonify({
-                'message': "Couldn't make it :("
-            }), 500
+    soup, req_status = fetcher.get_soup_from_url(url)
+    if req_status != status.OK:
+        return utils.gen_response(500, req_status)
 
     keywords = parser.find_meta_keywords(soup)
     result = parser.count_keywords_in_text(soup, keywords)
-
-    return flask.jsonify({
-            'message': "Success!",
-            'result': result
-        }), 200
+    return utils.gen_response(200, status.OK, result)
 
 
 if __name__ == '__main__':
-    # Development routine, executed only when file explicitly run
-    # from console. For production, use appropriate server e.g. gunicorn.
-    app.run(debug=True)
+    # Development routine, executed only when file explicitly run from
+    # the console. For production, use appropriate server e.g. gunicorn.
+    # See README.md for more details.
+    @app.route('/')
+    def serve_index():
+        return send_from_directory('../frontend/', 'index.html')
+    @app.route('/static/<path>/<resource>')
+    def serve_static(path, resource):
+        print(path, resource)
+        return send_from_directory('../frontend/static/{}/'.format(path), resource)
+
+    app.run(debug=True, port=8000)

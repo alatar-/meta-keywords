@@ -3,7 +3,7 @@ from unittest.mock import MagicMock
 from bs4 import BeautifulSoup
 
 from api import fetcher
-from api.utils import status
+from api.messages import status
 
 
 def load_file_content(filename):
